@@ -1,0 +1,34 @@
+{% extends 'statecoin50/base.html' %}
+{% block content %}
+<div class = "container">
+
+
+
+<div class = "row" style = "height:500">
+
+<div class = "col-sm-4" style = "overflow: scroll; height:500">
+  <p> Click the state link to </P>
+  <p> add a coin to your collection</P>
+{% for coin in coins %}
+
+<li><a href = "{% url 'coindetail' coin_pk=coin.pk %}">{{coin.state}}</a></li>
+<img src="{{ coin.stURL }}">
+{% if coin.owned %}
+<p>Collected:{{coin.dateOwned}}</p>
+{% else %}
+<p> Not Owned </p>
+{% endif %}
+
+{% empty %}
+<p>No coins in the database</p>
+{% endfor %}
+
+</div>
+<div class= "col-sm-8">
+
+  {% include 'statecoin50/map_coins.html' %}
+
+</div>
+</div>
+</div>
+{% endblock %}
