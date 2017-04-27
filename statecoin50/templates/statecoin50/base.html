@@ -1,15 +1,26 @@
 <html>
-  <head>
-    <title>Coin Collector: 50 State Coins</title>
-  </head>
-  <body>
-    <div>
-      <h1><a href="{% url 'coin_collector' %}">50 US State Coins Collection</a></h1>
-    </div>
-    <div>
-    
-      {% block content %}
-      {% endblock %}
-    </div>
+<body>
+<div>
+
+  {% if user.is_authenticated %}
+      <p>Hello {{ user.username }}<a href="{% url 'logout' %}">Log out</a></p>
+  {% else %}
+     Log in here  <a href="{% url 'login' %}" >Click here</a>
+  {% endif %}
+</div>
+
+
+<div>
+  {% if user.is_authenticated %}
+  <h1><a href="{% url 'coin_collector' user_pk=user.pk %}">50 US State Coins Collection</a></h1>
+  {%else%}
+
+  {% endif %}
+</div>
+<div>
+
+  {% block content %}
+  {% endblock %}
+</div>
   </body>
 <html>

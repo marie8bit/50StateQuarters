@@ -3,13 +3,17 @@ from .models import Coin
 from .forms import CoinCollectorForm, CoinDetailForm
 from django.http import HttpResponse
 from django.template import Context, loader
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 import json
 import folium
 # Create your views here.
-def coin_collector(request):
-    coins = Coin.objects.order_by('state')
+@login_required
+def coin_collector(request, user_pk):
+    user = User.objects.get(pk=user_pk)
+    coins = Coin.objects.filter(user_pk).order_by('state')
     if not (coins):
         states_abbr = json.load(open('statecoin50/fixtures/us_states_abbr.json.txt'))
         f = open('statecoin50/fixtures/50sqReport.txt', 'rb').read()
@@ -71,7 +75,7 @@ def coin_collector(request):
         # url ='https://www.usmint.gov/images/mint_programs/50sq_program/states/DE_Designs.gif'
         # coin = Coin(state, abr, owned, url)
         # coins.append(coin)
-
+@login_required
 def coindetail(request, coin_pk):
     coin = get_object_or_404(Coin, pk=coin_pk)
     form = CoinDetailForm(request.POST)
@@ -92,3 +96,6 @@ def coindetail(request, coin_pk):
 
 #source reference http://stackoverflow.com/questions/14400035/how-to-return-a-static-html-file-as-a-response-in-django
 #http://stackoverflow.com/questions/17168256/template-does-not-exist
+
+def homepage(request):
+    return render(request, 'statecoin50/home.html')

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 # Create your models here.
 class Coin(models.Model):
-    #owner = models.ForeignKey('auth.User')
+    owner = models.ForeignKey('auth.User')
     state = models.CharField(max_length = 250)
     stAbbr= models.CharField(max_length = 2)
     owned= models.BooleanField(default=False)
@@ -20,3 +20,4 @@ class Coin(models.Model):
 
     def __str__(self):
         return self.state
+    

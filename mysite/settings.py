@@ -57,7 +57,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['statecoin50/fixtures', os.path.join(PROJECT_ROOT, "templates/statecoin50")],
-        
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,3 +122,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+LOGIN_REDIRECT_URL = 'statecoin50:coin_collector'
+LOGOUT_REDIRECT_URL = 'statecoin50:home'
