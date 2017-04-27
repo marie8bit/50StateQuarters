@@ -6,7 +6,7 @@ class CoinCollectorForm(forms.ModelForm):
 
     class Meta:
         model = Coin
-        fields = ('state', 'stURL', 'owned',)
+        fields = ('state', 'stImg', 'owned',)
 
 class CoinDetailForm(forms.ModelForm):
     class Meta:

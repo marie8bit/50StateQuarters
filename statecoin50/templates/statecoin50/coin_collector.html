@@ -1,4 +1,5 @@
 {% extends 'statecoin50/base.html' %}
+{% load staticfiles %}
 {% block content %}
 <div class = "container">
 
@@ -12,7 +13,7 @@
 {% for coin in coins %}
 
 <li><a href = "{% url 'coindetail' coin_pk=coin.pk %}">{{coin.state}}</a></li>
-<img src="{{ coin.stURL }}">
+<img src="{% static coin.stImg %}" height = "100" width="100">
 {% if coin.owned %}
 <p>Collected:{{coin.dateOwned}}</p>
 {% else %}
@@ -20,7 +21,7 @@
 {% endif %}
 
 {% empty %}
-<p>No coins in the database</p>
+<p>No coins in the database, try reloading the page</p>
 {% endfor %}
 
 </div>

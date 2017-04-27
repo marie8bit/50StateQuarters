@@ -27,12 +27,12 @@ def coin_collector(request):
             state = key
             abr= states_abbr[key]
             owned = False
-            url= 'https://www.usmint.gov/images/mint_programs/50sq_program/states/'+abr+'_Designs.gif'
+            url= 'resources/stateImage/'+abr+'.jpg'
             caseState = state.lower()
             dex = caseDetsLower.index(caseState)
             dates = state_dets[dex+1]
             details = state_dets[dex+2]
-            coin = Coin(state = state, stAbbr = abr, owned= owned, stURL=url, dates = dates, details = details)
+            coin = Coin(state = state, stAbbr = abr, owned= owned, stImg=url, dates = dates, details = details)
             coin.save()
             map_us = folium.Map(location=[40, -102], zoom_start=3)
             #map_us.geo_json(geo_path = statesOwned, data = statesOwned, columns=['State','Owned'], fill_color = 'YlGn', fill_opacity=0.7, line_opacity =0.2)
@@ -92,8 +92,3 @@ def coindetail(request, coin_pk):
 
 #source reference http://stackoverflow.com/questions/14400035/how-to-return-a-static-html-file-as-a-response-in-django
 #http://stackoverflow.com/questions/17168256/template-does-not-exist
-def map_coins(request):
-    # template = loader.get_template("statecoin50/fixtures/map_coins.html")
-    # return HttpResponse(template.render)
-    #return render_to_response('statecoin50/fixtures/map_coins.html')
-    return render(request, 'statecoin50/fixtures/map_coins.html')

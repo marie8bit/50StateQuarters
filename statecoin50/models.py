@@ -7,7 +7,7 @@ class Coin(models.Model):
     stAbbr= models.CharField(max_length = 2)
     owned= models.BooleanField(default=False)
     dateOwned= models.DateField(blank= True, null=True)
-    stURL=models.URLField(max_length= 250)
+    stImg=models.CharField(blank = True, max_length= 250)
     dates = models.CharField(blank = True, max_length = 250)
     details = models.CharField(blank= True, max_length = 500)
 
