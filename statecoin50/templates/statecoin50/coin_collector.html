@@ -17,7 +17,7 @@
 {% for coin in coins %}
 <div class = coin>
 <li><a href = "{% url 'coindetail' coin_pk=coin.pk %}" >{{coin.state}}</a></li>
-<img src="{% static coin.stImg %}" >
+<a href = "{% url 'coindetail' coin_pk=coin.pk %}" ><img src="{% static coin.stImg %}" ></a>
 {% if coin.owned %}
 <p>Collected:{{coin.dateOwned}}</p>
 {% else %}

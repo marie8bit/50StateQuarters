@@ -84,6 +84,45 @@ def coindetail(request, coin_pk):
             print('form is not valid')
     else:
         form = CoinDetailForm(instance = coin)
+        statesOwned = Coin.objects.filter(owner = coin.owner).order_by('stAbbr')
+        all_state_map={}
+        for item in statesOwned:
+            if (coin.stAbbr == item.stAbbr):
+                number = 10
+            else:
+                number = 1
+            all_state_map[item.stAbbr]=number
+
+        #source reference https://gist.githubusercontent.com/meiqimichelle/7727723/raw/0109432d22f28fd1a669a3fd113e41c4193dbb5d/USstates_avg_latLong
+        location = json.load(open('statecoin50/fixtures/USstates_avg_latLong.json'))
+
+        for d in location:
+            state = d['state']
+            lat =d['latitude']
+            lon =d['longitude']
+            # print(state)
+            # print(lat)
+            # print(lon)
+            # print(coin.state)
+            if (state == coin.state):
+                if (state == "Alaska"):
+                    map_us = folium.Map(location=[lat, lon], zoom_start=4)
+
+                else:
+                    map_us = folium.Map(location=[lat, lon], zoom_start=7)
+                break
+            else:
+                map_us = folium.Map(location=[50, -118], zoom_start=3)
+        us_states_file='statecoin50/fixtures/us_states.json'
+
+        map_us.choropleth(geo_path = us_states_file,
+                        data = all_state_map,
+                        columns=['state','number'],
+                        key_on='id',
+                        fill_color = 'YlGn', fill_opacity=0.7, line_opacity =0.2,
+                        threshold_scale = [1,3,5,7,10],
+                        legend_name = "State Map")
+        map_us.save('statecoin50/templates/statecoin50/state_map.html')
         return render(request, 'statecoin50/coindetail.html', {'coin':coin}, {'form':form})
 
 #source reference http://stackoverflow.com/questions/14400035/how-to-return-a-static-html-file-as-a-response-in-django

@@ -13,19 +13,20 @@
   {% if user.is_authenticated %}
 
       <h1><a href="{% url 'coin_collector' user_pk=user.pk %}" >50 US State Coins Collection</a></ha>
-      <p class= "top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
+      <p class= "top-menu">Hello {{ user.username }}<br/><small>(<a href="{% url 'logout' %}">Log out</a>)(<a href = "{%url 'homepage'%}">Home</a>)</small></p>
   {% else %}
       <a href="{% url 'login' %}" >Login here</a>
       <a href="{% url 'register' %}" >Register here</a>
   {% endif %}
 </div>
 
-<div style = "background-color:#41ab5d">
+<div >
 
   {% block content %}
   {% endblock %}
 </div>
-<div class = page-header></div>
+
 
 </body>
+
 <html>

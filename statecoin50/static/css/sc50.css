@@ -10,12 +10,34 @@ body {
 .page-header {
     background-color: #ff9400;
     margin-top: 0;
+    margin-bottom: 0;
     padding: 20px 20px 20px 40px;
 }
+.page-footer {
+  background-color: #ff9400;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 20px 20px 20px 40px;
+}
 .row{
-    height:500;
+    margin-top: 0;
+    background-color:#41ab5d;
+    height:500px;
     margin-left: 20px;
     padding: 20px 20px 20px 40px;
+}
+.row-detail{
+    width:100%;
+    height:800px;
+    margin-left: 0px;
+    padding: 20px 20px 20px 40px;
+}
+.row-info{
+
+    height:500px;
+    margin-left: 0px;
+    padding: 20px 20px 20px 40px;
+    float: left;
 }
 .col-scroll{
     width: 500px;
