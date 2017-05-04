@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'statecoin50',
+
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,8 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['statecoin50/fixtures', os.path.join(PROJECT_ROOT, "templates/statecoin50")],
+        'DIRS': [os.path.join(PROJECT_ROOT, "templates/"), ],
+        #'DIRS': [os.path.join(PROJECT_ROOT, "templates/registration"), os.path.join(PROJECT_ROOT, "templates/statecoin50")],
 
         'APP_DIRS': True,
         'OPTIONS': {
@@ -123,5 +125,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-LOGIN_REDIRECT_URL = 'statecoin50:coin_collector'
-LOGOUT_REDIRECT_URL = 'statecoin50:home'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

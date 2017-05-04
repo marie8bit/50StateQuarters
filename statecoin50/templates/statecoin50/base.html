@@ -1,26 +1,31 @@
-<html>
-<body>
-<div>
+{% load static %}
+<head>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/sc50.css' %}" />
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+<body >
+
+<div class = page-header>
 
   {% if user.is_authenticated %}
-      <p>Hello {{ user.username }}<a href="{% url 'logout' %}">Log out</a></p>
+
+      <h1><a href="{% url 'coin_collector' user_pk=user.pk %}" >50 US State Coins Collection</a></ha>
+      <p class= "top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
   {% else %}
-     Log in here  <a href="{% url 'login' %}" >Click here</a>
+      <a href="{% url 'login' %}" >Login here</a>
+      <a href="{% url 'register' %}" >Register here</a>
   {% endif %}
 </div>
 
-
-<div>
-  {% if user.is_authenticated %}
-  <h1><a href="{% url 'coin_collector' user_pk=user.pk %}">50 US State Coins Collection</a></h1>
-  {%else%}
-
-  {% endif %}
-</div>
-<div>
+<div style = "background-color:#41ab5d">
 
   {% block content %}
   {% endblock %}
 </div>
-  </body>
+<div class = page-header></div>
+
+</body>
 <html>

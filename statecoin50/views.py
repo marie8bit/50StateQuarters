@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, render_to_response
 from .models import Coin
-from .forms import CoinCollectorForm, CoinDetailForm
+from .forms import CoinCollectorForm, CoinDetailForm, UserRegistrationForm
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.contrib.auth.decorators import login_required
@@ -9,11 +9,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 import json
 import folium
+
+
 # Create your views here.
 @login_required
 def coin_collector(request, user_pk):
     user = User.objects.get(pk=user_pk)
-    coins = Coin.objects.filter(user_pk).order_by('state')
+    coins = Coin.objects.filter(owner = user).order_by('state')
     if not (coins):
         states_abbr = json.load(open('statecoin50/fixtures/us_states_abbr.json.txt'))
         f = open('statecoin50/fixtures/50sqReport.txt', 'rb').read()
@@ -24,10 +26,7 @@ def coin_collector(request, user_pk):
         for line in state_dets:
             lline = line.lower()
             caseDetsLower.append(lline)
-        # stateabbr_list = list(states_abbr.values())
-        # state_list = list(states_abbr.keys())
         for key in states_abbr:
-            # dex = stateabbr_list.index(item)
             state = key
             abr= states_abbr[key]
             owned = False
@@ -36,14 +35,14 @@ def coin_collector(request, user_pk):
             dex = caseDetsLower.index(caseState)
             dates = state_dets[dex+1]
             details = state_dets[dex+2]
-            coin = Coin(state = state, stAbbr = abr, owned= owned, stImg=url, dates = dates, details = details)
+            coin = Coin(owner = user, state = state, stAbbr = abr, owned= owned, stImg=url, dates = dates, details = details)
             coin.save()
             map_us = folium.Map(location=[40, -102], zoom_start=3)
             #map_us.geo_json(geo_path = statesOwned, data = statesOwned, columns=['State','Owned'], fill_color = 'YlGn', fill_opacity=0.7, line_opacity =0.2)
             map_us.save('statecoin50/templates/statecoin50/map_coins.html')
         return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
     else:
-        statesOwned = Coin.objects.order_by('stAbbr')
+        statesOwned = Coin.objects.filter(owner = user).order_by('stAbbr')
 
 
         all_state_map={}
@@ -56,9 +55,7 @@ def coin_collector(request, user_pk):
 
         map_us = folium.Map(location=[50, -118], zoom_start=3)
         us_states_file='statecoin50/fixtures/us_states.json'
-        #state_list=list(us_states_file)
-        #us_states_file=us_states_file.sort()
-        #all_state_map['stAbbr']=us_states_file['state']
+
         map_us.choropleth(geo_path = us_states_file,
                         data = all_state_map,
                         columns=['state','number'],
@@ -68,13 +65,8 @@ def coin_collector(request, user_pk):
                         legend_name = "Coins Collected: Yellow= Not Collected - Green = Collected")
         map_us.save('statecoin50/templates/statecoin50/map_coins.html')
         return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
-        #
-        # state = 'Delaware'
-        # abr = 'DE'
-        # owned = False
-        # url ='https://www.usmint.gov/images/mint_programs/50sq_program/states/DE_Designs.gif'
-        # coin = Coin(state, abr, owned, url)
-        # coins.append(coin)
+
+
 @login_required
 def coindetail(request, coin_pk):
     coin = get_object_or_404(Coin, pk=coin_pk)
@@ -97,5 +89,29 @@ def coindetail(request, coin_pk):
 #source reference http://stackoverflow.com/questions/14400035/how-to-return-a-static-html-file-as-a-response-in-django
 #http://stackoverflow.com/questions/17168256/template-does-not-exist
 
+
 def homepage(request):
     return render(request, 'statecoin50/home.html')
+
+
+def register(request):
+
+    if request.method == 'POST':
+
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+            login(request, user)
+            if request.user.is_authenticated():  # If userprofile object has a user object property
+                coins = []
+                return redirect('statecoin50/coin_collector.html', {'coins' : coins}, pk=user.pk)
+
+        else :
+            message = 'Please check the data you entered'
+            return render(request, 'registration/register.html', { 'form' : form , 'message' : message } )
+
+
+    else:
+        form = UserRegistrationForm()
+        return render(request, 'registration/register.html', { 'form' : form } )
