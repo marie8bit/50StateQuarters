@@ -8,9 +8,9 @@
 
 
 {% block content %}
-<div class = "row-detail" style = "background-color:#41ab5d; height:850; width: 100%">
+<div id = "row-detail" >
   <div class = "col-sm-6" style="width:700">
-<form method ="POST" action ="" >
+  <form method ="POST" action ="" >
   <div class = coin-detail>
   {% csrf_token %}
   {{form.errors}}

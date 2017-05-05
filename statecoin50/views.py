@@ -70,6 +70,61 @@ def coin_collector(request, user_pk):
 
 
 @login_required
+def collection_wishlist(request, user_pk):
+    user = User.objects.get(pk=user_pk)
+    coins = Coin.objects.filter(owner = user).order_by('state')
+    if not (coins):
+        states_abbr = json.load(open('statecoin50/fixtures/us_states_abbr.json.txt'))
+        f = open('statecoin50/fixtures/50sqReport.txt', 'rb').read()
+        text = f.decode('utf-16')
+        textn = text.replace('\n', '')
+        state_dets = textn.split('\r')
+        caseDetsLower = []
+        for line in state_dets:
+            lline = line.lower()
+            caseDetsLower.append(lline)
+        for key in states_abbr:
+            state = key
+            abr= states_abbr[key]
+            owned = False
+            url= 'resources/stateImage/'+abr+'.jpg'
+            caseState = state.lower()
+            dex = caseDetsLower.index(caseState)
+            dates = state_dets[dex+1]
+            details = state_dets[dex+2]
+            coin = Coin(owner = user, state = state, stAbbr = abr, owned= owned, stImg=url, dates = dates, details = details)
+            coin.save()
+            map_us = folium.Map(location=[40, -102], zoom_start=3)
+            #map_us.geo_json(geo_path = statesOwned, data = statesOwned, columns=['State','Owned'], fill_color = 'YlGn', fill_opacity=0.7, line_opacity =0.2)
+            map_us.save('statecoin50/templates/statecoin50/map_coins.html')
+            coins = Coin.objects.filter(owner = user).order_by('state')
+        return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
+    else:
+        statesOwned = Coin.objects.filter(owner = user).order_by('stAbbr')
+
+
+        all_state_map={}
+        for coin in statesOwned:
+            if coin.owned:
+                number = 1
+            else:
+                number = 10
+            all_state_map[coin.stAbbr]=number
+
+        map_us = folium.Map(location=[50, -118], zoom_start=3)
+        us_states_file='statecoin50/fixtures/us_states.json'
+
+        map_us.choropleth(geo_path = us_states_file,
+                        data = all_state_map,
+                        columns=['state','number'],
+                        key_on='id',
+                        fill_color = 'PuBuGn', fill_opacity=0.7, line_opacity =0.2,
+                        threshold_scale = [1,3,5,7,10],
+                        legend_name = "Coins not collected")
+        map_us.save('statecoin50/templates/statecoin50/map_wishlist.html')
+        return render(request, 'statecoin50/collection_wishlist.html', {'coins':coins})
+
+@login_required
 def coindetail(request, coin_pk):
     coin = get_object_or_404(Coin, pk=coin_pk)
     form = CoinDetailForm(request.POST)
