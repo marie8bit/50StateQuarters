@@ -1,6 +1,9 @@
 {% extends 'statecoin50/base.html' %}
 {% block content %}
 <p>Welcome to the 50 state quarter Coin Collector Website</p>
-
+{% if user.is_authenticated %}
+<p>Click on the 50 US State Coins Collection link to view your collection</p>
+{%else%}
 <p> Log in to your account or register your collection</p>
+{%endif%}
 {% endblock %}

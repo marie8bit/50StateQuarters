@@ -7,7 +7,9 @@ body {
     padding-left: 15px;
 }
 
-.page-header {
+#page-header {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
     background-color: #ff9400;
     margin-top: 0;
     margin-bottom: 0;
@@ -15,16 +17,17 @@ body {
 }
 .page-footer {
   background-color: #ff9400;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: 0px;
+  margin-bottom: 20px;
   padding: 20px 20px 20px 40px;
 }
 .row{
     margin-top: 0;
     background-color:#41ab5d;
-    height:500px;
+    height:600px;
     margin-left: 20px;
     padding: 20px 20px 20px 40px;
+    
 }
 .row-detail{
     width:100%;

@@ -6,6 +6,7 @@ from django.template import Context, loader
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 import json
 import folium
@@ -40,6 +41,7 @@ def coin_collector(request, user_pk):
             map_us = folium.Map(location=[40, -102], zoom_start=3)
             #map_us.geo_json(geo_path = statesOwned, data = statesOwned, columns=['State','Owned'], fill_color = 'YlGn', fill_opacity=0.7, line_opacity =0.2)
             map_us.save('statecoin50/templates/statecoin50/map_coins.html')
+            coins = Coin.objects.filter(owner = user).order_by('state')
         return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
     else:
         statesOwned = Coin.objects.filter(owner = user).order_by('stAbbr')
@@ -105,9 +107,19 @@ def coindetail(request, coin_pk):
             # print(lon)
             # print(coin.state)
             if (state == coin.state):
-                if (state == "Alaska"):
+                if (state =='Alaska'):
                     map_us = folium.Map(location=[lat, lon], zoom_start=4)
-
+                elif(state=='Colorado' or state =='California' or state=='Idaho'
+                    or state=='Florida' or state=='Kansas' or state=='Kentucky'
+                    or state=='Michigan' or state=='Minnesota' or state=='Montana'
+                    or state=='Nebraska' or state=='Nevada' or state=='New Mexico'
+                    or state=='New York' or state=='North Carolina' or state=='North Dakota'
+                    or state=='Oklahoma' or state=='Oregon' or state=='South Dakota'
+                    or state=='Tennessee'  or state =='Virginia'
+                    or state =='Washington' or state =='Wyoming'):
+                    map_us = folium.Map(location=[lat, lon], zoom_start=6)
+                elif(state =='Texas'):
+                    map_us = folium.Map(location=[lat, lon-2.5], zoom_start=6)
                 else:
                     map_us = folium.Map(location=[lat, lon], zoom_start=7)
                 break
@@ -121,7 +133,7 @@ def coindetail(request, coin_pk):
                         key_on='id',
                         fill_color = 'YlGn', fill_opacity=0.7, line_opacity =0.2,
                         threshold_scale = [1,3,5,7,10],
-                        legend_name = "State Map")
+                        legend_name = coin.state+" State Map")
         map_us.save('statecoin50/templates/statecoin50/state_map.html')
         return render(request, 'statecoin50/coindetail.html', {'coin':coin}, {'form':form})
 
@@ -141,11 +153,14 @@ def register(request):
         if form.is_valid():
             user = form.save()
             user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+
             login(request, user)
             if request.user.is_authenticated():  # If userprofile object has a user object property
-                coins = []
-                return redirect('statecoin50/coin_collector.html', {'coins' : coins}, pk=user.pk)
-
+                coins = Coin.objects.filter(owner = request.user).order_by('state')
+                return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
+            else:
+                message = ValidationError.message
+                return render(request, 'registration/register.html', { 'form' : form , 'message' : message } )
         else :
             message = 'Please check the data you entered'
             return render(request, 'registration/register.html', { 'form' : form , 'message' : message } )
