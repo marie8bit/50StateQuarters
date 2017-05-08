@@ -17,6 +17,7 @@ import folium
 def coin_collector(request, user_pk):
     user = User.objects.get(pk=user_pk)
     coins = Coin.objects.filter(owner = user).order_by('state')
+
     if not (coins):
         states_abbr = json.load(open('statecoin50/fixtures/us_states_abbr.json.txt'))
         f = open('statecoin50/fixtures/50sqReport.txt', 'rb').read()
@@ -42,7 +43,14 @@ def coin_collector(request, user_pk):
             #map_us.geo_json(geo_path = statesOwned, data = statesOwned, columns=['State','Owned'], fill_color = 'YlGn', fill_opacity=0.7, line_opacity =0.2)
             map_us.save('statecoin50/templates/statecoin50/map_coins.html')
             coins = Coin.objects.filter(owner = user).order_by('state')
-        return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
+            ownedCount= Coin.objects.filter(owner=user).filter(owned=True).count()
+            if (ownedCount==0):
+                message= 'You have not collected any coins yet'
+            elif(ownedCount==1):
+                message='You have collected '+str(ownedCount)+'coin'
+            else:
+                message='You have collected '+str(ownedCount)+'coins'
+        return render(request, 'statecoin50/coin_collector.html', {'coins':coins, 'message':message})
     else:
         statesOwned = Coin.objects.filter(owner = user).order_by('stAbbr')
 
@@ -66,7 +74,14 @@ def coin_collector(request, user_pk):
                         threshold_scale = [1,3,5,7,10],
                         legend_name = "Coins Collected: Yellow= Not Collected - Green = Collected")
         map_us.save('statecoin50/templates/statecoin50/map_coins.html')
-        return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
+        ownedCount= Coin.objects.filter(owner=user).filter(owned=True).count()
+        if (ownedCount==0):
+            message= 'You have not collected any coins yet'
+        elif(ownedCount==1):
+            message='You have collected '+str(ownedCount)+' coin'
+        else:
+            message='You have collected '+str(ownedCount)+' coins'
+        return render(request, 'statecoin50/coin_collector.html', {'coins':coins, 'message':message})
 
 
 @login_required
@@ -120,7 +135,7 @@ def collection_wishlist(request, user_pk):
                         key_on='id',
                         fill_color = 'PuBuGn', fill_opacity=0.7, line_opacity =0.2,
                         threshold_scale = [1,3,5,7,10],
-                        legend_name = "Coins not collected")
+                        legend_name = "Dark Blue = Coins not collected")
         map_us.save('statecoin50/templates/statecoin50/map_wishlist.html')
         return render(request, 'statecoin50/collection_wishlist.html', {'coins':coins})
 
@@ -197,7 +212,11 @@ def coindetail(request, coin_pk):
 
 
 def homepage(request):
-    return render(request, 'statecoin50/home.html')
+    userCount = User.objects.count()
+    coinCount = Coin.objects.filter(owned=True).count()
+
+    print(coinCount)
+    return render(request, 'statecoin50/home.html', {'coinCount':coinCount, 'userCount':userCount})
 
 
 def register(request):
@@ -211,6 +230,7 @@ def register(request):
 
             login(request, user)
             if request.user.is_authenticated():  # If userprofile object has a user object property
+
                 coins = Coin.objects.filter(owner = request.user).order_by('state')
                 return render(request, 'statecoin50/coin_collector.html', {'coins':coins})
             else:

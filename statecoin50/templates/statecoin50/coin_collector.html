@@ -1,18 +1,19 @@
 {% extends 'statecoin50/base.html' %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/sc50.css' %}" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+<link rel="stylesheet" href="{% static 'css/sc50.css' %}" />
 {% block content %}
 
 <div class = "row" >
 
 <div class = "col-sm-4"  id = col-scroll >
-  <p> Click the state link to </P>
-  <p> add a coin to your collection</P>
+  <h2 ><b> {{message}}</b></h2>
+  <p> Click a coin to add it to your collection </p>
+
 
 {% for coin in coins %}
 <div class = coin>
