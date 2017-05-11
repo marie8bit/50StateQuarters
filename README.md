@@ -1,13 +1,13 @@
 
 "50 State Coin Collection"
 
-This app allows you to track your coins collect of the 50 state quarters program by the US Mint
+This app allows you to track coins collected frm teh set of 50 state quarters. A program by the US Mint
 
 It uses static file images, and text files to provide information to users
 
 It uses CSS styles to improve the look of the application 
 
-It allows multiple users to store data about thier coin colletions
+It allows multiple users to store data about their coin colletions
 
 Displays app info such as the number of users registered and number of coins collected using database queries
 
