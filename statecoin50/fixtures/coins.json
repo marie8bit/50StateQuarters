@@ -4,7 +4,7 @@
       "state" : "Alabama",
       "stAbbr" : "AL",
       "owned": 1,
-      "datedOwned":"2017-04-12",
+      "dateOwned":"2017-04-12",
       "stImg": "resources/stateImage/AL.jpg",
       "dates" : "latin stuff",
       "details" : "lots of words"
@@ -17,7 +17,7 @@
       "state" : "Alaska",
       "stAbbr" : "AK",
       "owned": 0,
-      "datedOwned":"",
+      "dateOwned":null,
       "stImg": "resources/stateImage/AK.jpg",
       "dates" : "latin stuff",
       "details" : "lots of words"
@@ -25,25 +25,26 @@
     }
 
   },
-  {"model" : "statecoin50.coin", "pk" : 3 , "fields" :
+  {"model" : "statecoin50.coin",
+    "pk" : 3 ,
+    "fields" :
       { "owner" : 1,
         "state" : "Arizona",
         "stAbbr" : "AZ",
         "owned": 0,
-        "datedOwned":"",
+        "dateOwned":null,
         "stImg": "resources/stateImage/AZ.jpg",
         "dates" : "latin stuff",
         "details" : "lots of words"
-
       }
-
     },
+
     {"model" : "statecoin50.coin", "pk" : 4 , "fields" :
         { "owner" : 1,
           "state" : "Arkansas",
           "stAbbr" : "AR",
           "owned":0,
-          "datedOwned":"",
+          "dateOwned":null,
           "stImg": "resources/stateImage/AR.jpg",
           "dates" : "latin stuff",
           "details" : "lots of words"
@@ -56,7 +57,7 @@
             "state" : "California",
             "stAbbr" : "CA",
             "owned": 0,
-            "datedOwned":"",
+            "dateOwned":null,
             "stImg": "resources/stateImage/CA.jpg",
             "dates" : "latin stuff",
             "details" : "lots of words"
@@ -69,12 +70,12 @@
               "state" : "Colorado",
               "stAbbr" : "CO",
               "owned": 0,
-              "datedOwned":"",
+              "dateOwned":null,
               "stImg": "resources/stateImage/AL.jpg",
               "dates" : "latin stuff",
               "details" : "lots of words"
 
             }
 
-          },
+          }
 ]
